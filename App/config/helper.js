@@ -18,7 +18,7 @@ exports.transporter = nodemailer.createTransport({
   port: 587,
   secure: false, // use STARTTLS (upgrade connection to TLS after connecting)
   auth: {
-    user: "priyaraj0890@gmail.com",
-    pass: "yyyxlijyenixdbfm",
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
