@@ -10,25 +10,19 @@ const countrySchema = mongoose.Schema(
     },
     order: {
       type: Number,
-      required: [true,"country order number required"],
+      required: [true, "country order number required"],
     },
     status: {
       type: Boolean,
       default: true
     },
-    created_at: {
-      type: Date,
-      default: Date.now()
-    },
-    updated_at: {
-      type: Date,
-      default: Date.now()
-    },
     deleted_at: {
       type: Date,
       default: null
     }
-
+  },
+  {
+    timestamps: true,
   }
 )
 

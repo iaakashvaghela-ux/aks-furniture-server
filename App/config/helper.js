@@ -1,6 +1,8 @@
 var slugify = require('slugify');
 const nodemailer = require("nodemailer");
-
+const adminModel = require('../model/adminModel');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 exports.createSlug = (name) => {
   return slugify(name, {
@@ -18,7 +20,22 @@ exports.transporter = nodemailer.createTransport({
   port: 587,
   secure: false, // use STARTTLS (upgrade connection to TLS after connecting)
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: `priyaraj0890@gmail.com`,
+    pass: `yyyxlijyenixdbfm`,
   },
 });
+
+
+exports.adminCreate = async () => {
+
+  let admin = await adminModel.find();
+  hash = bcrypt.hashSync("password123", saltRounds)
+  if (admin.length === 0) {
+    adminModel.create({
+      email: "admin@example.com",
+      password: hash
+    })
+  }
+
+
+}

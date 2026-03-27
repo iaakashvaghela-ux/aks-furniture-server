@@ -55,6 +55,18 @@ let faqView = async (req, res) => {
 }
 
 
+let faqSingleData = async (req, res) => {
+  let { id } = req.params;
+  let Single = await faqModel.findById(id)
+
+  res.status(200).json({
+    _status: true,
+    _data: Single,
+    _message: "single data found"
+  })
+}
+
+
 let faqDelete = (req, res) => {
 
   let { ids } = req.body
@@ -84,12 +96,18 @@ let faqDelete = (req, res) => {
     })
 }
 
-let faqUpdate = (req, res) => {
-  let obj = {
-    _status: true,
-    _message: "faq Update"
-  }
-  res.send(obj)
+let faqUpdate = async (req, res) => {
+  let { id } = req.params;
+    let data = req.body;
+    let updateData = await faqModel.updateOne({ _id: id }, { $set: data })
+
+
+    let obj = {
+        _status: true,
+        _message: "faq Update",
+        updateData
+    }
+    res.send(obj)
 }
 
 let faqChangeStatus = async (req, res) => {
@@ -121,4 +139,4 @@ let faqChangeStatus = async (req, res) => {
 }
 
 
-module.exports = { faqCreate, faqView, faqDelete, faqUpdate, faqChangeStatus }
+module.exports = { faqCreate, faqView, faqDelete, faqUpdate, faqChangeStatus, faqSingleData }

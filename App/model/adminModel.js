@@ -1,11 +1,11 @@
 const { default: mongoose } = require("mongoose");
 
 
-const userSchema = mongoose.Schema(
+const adminSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "please fil the value"],
+     
       match: [/^[a-zA-Z ]{2,50}$/, "please fill correct value"]
 
     },
@@ -13,7 +13,7 @@ const userSchema = mongoose.Schema(
 
     email: {
       type: String,
-      required: [true, "please fil the value"],
+     
       validate: {
         validator: async function (v) {
           const email = await this.constructor.findOne({ email: v, deleted_at: null });
@@ -25,7 +25,7 @@ const userSchema = mongoose.Schema(
     },
     phone: {
       type: String,
-      required: [true, "please fil the value"],
+     
       validate: {
         validator: async function (v) {
           const phone = await this.constructor.findOne({ phone: v, deleted_at: null });
@@ -36,7 +36,7 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "please fil the value"],
+     
     },
 
     gender: {
@@ -44,16 +44,18 @@ const userSchema = mongoose.Schema(
       enum: ["1", "2"],
       default: 1
     },
+    companyLogo: String,
+    companyName: String,
+    companyAddress: String,
+    companyPhone: String,
+    companyEmail: String,
+    companyMap: String,
+    companyInstagram: String,
+    companyFacebook: String,
+    companyTwitter: String,
+    companyLinkedin: String,
 
-
-    status: {
-      type: Boolean,
-      default: true
-    },
-    deleted_at: {
-      type: Date,
-      default: null
-    },
+   
   },
   {
     timestamps: true,
@@ -61,6 +63,6 @@ const userSchema = mongoose.Schema(
 )
 
 
-let userModel = mongoose.model("user", userSchema)
+let adminModel = mongoose.model("admin", adminSchema)
 
-module.exports = userModel
+module.exports = adminModel

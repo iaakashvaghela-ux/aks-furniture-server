@@ -52,7 +52,16 @@ let countryView = async (req, res) => {
     res.send(obj)
 }
 
+let countrySingleData = async (req, res) => {
+    let { id } = req.params;
+    let Single = await countryModel.findById(id)
 
+    res.status(200).json({
+        _status: true,
+        _data: Single,
+        _message: "single data found"
+    })
+}
 let countryDelete = (req, res) => {
 
     let { ids } = req.body
@@ -82,10 +91,16 @@ let countryDelete = (req, res) => {
         })
 }
 
-let countryUpdate = (req, res) => {
+let countryUpdate = async (req, res) => {
+    let { id } = req.params;
+    let data = req.body;
+    let updateData = await countryModel.updateOne({ _id: id }, { $set: data })
+
+
     let obj = {
         _status: true,
-        _message: "country Update"
+        _message: "country Update",
+        updateData
     }
     res.send(obj)
 }
@@ -119,4 +134,4 @@ let countryChangeStatus = async (req, res) => {
 }
 
 
-module.exports = { countryCreate, countryView, countryDelete, countryUpdate, countryChangeStatus }
+module.exports = { countryCreate, countryView, countryDelete, countryUpdate, countryChangeStatus, countrySingleData }

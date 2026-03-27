@@ -9,18 +9,24 @@ const categoryRouter = require("./admin/categoryRoutes");
 const subCategoryRouter = require("./admin/subCategoryRoutes");
 const subSubCategoryRouter = require("./admin/subSubCategoryRoutes");
 const sliderRouter = require("./admin/sliderRoutes");
+const whyChooseUsRouter = require("./admin/whyChooseUsRoutes");
+const testimonialsRouter = require("./admin/testimonialsRoutes");
+const productRouter = require("./admin/productRoutes");
 let adminRouter = express.Router();
 
-adminRouter.use("/color",colorRouter)
-adminRouter.use("/country",countryRouter)
-adminRouter.use("/faq",faqRouter)
-adminRouter.use("/materials",materialsRouter)
-adminRouter.use("/user",userRouter)
-adminRouter.use("/enquiry",enquiryRouter)
-adminRouter.use("/category",categoryRouter)
-adminRouter.use("/sub-category",subCategoryRouter)
-adminRouter.use("/sub-sub-category",subSubCategoryRouter)
-adminRouter.use("/slider",sliderRouter)
+adminRouter.use("/color", colorRouter)
+adminRouter.use("/country", countryRouter)
+adminRouter.use("/faq", faqRouter)
+adminRouter.use("/materials", materialsRouter)
+adminRouter.use("/user", userRouter)
+adminRouter.use("/enquiry", enquiryRouter)
+adminRouter.use("/category", categoryRouter)
+adminRouter.use("/sub-category", subCategoryRouter)
+adminRouter.use("/sub-sub-category", subSubCategoryRouter)
+adminRouter.use("/slider", sliderRouter)
+adminRouter.use("/why-choose-us", whyChooseUsRouter)
+adminRouter.use("/testimonials", testimonialsRouter) 
+adminRouter.use("/product", productRouter)
 
 
 module.exports = adminRouter;

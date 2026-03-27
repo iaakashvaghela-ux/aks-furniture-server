@@ -84,46 +84,103 @@ let login = async (req, res) => {
 
 
 
+// let changePassword = async (req, res) => {
+//   let { currentPassword, newPassword } = req.body;
+//   let token = Headers.authorization.split(" ")[1];
+//   let deCode = jwt.decode(token, process.env.TOKENKEY);
+//   let { userId } = jwt.decode;
+
+//   let userData = await userModel.findOne({ _id: userId });
+//   const hash = bcrypt.hashSync(newPassword, saltRounds);
+
+//   if (bcrypt.compareSync(currentPassword, userData.password)) {
+//     await userModel.updateOne(
+//       {
+//         _id: userId
+//       },
+//       {
+//         $set: {
+//           password: hash
+//         }
+//       }
+//     )
+
+//     let obj = {
+//       _status: true,
+//       _message: "password change successfully.... ",
+//     }
+//     res.send(obj);
+//   } else {
+//     let obj = {
+//       _status: false,
+//       _message: "invalid old password.... ",
+//     }
+//     res.send(obj);
+//   }
+
+
+// }
+
+
 let changePassword = async (req, res) => {
-  let { oldPassword, newPassword } = req.body;
-  let token = Headers.authorization.split(" ")[1];
-  let deCode = jwt.decode(token, process.env.TOKENKEY);
-  let { userId } = jwt.decode;
+  try {
+    let { currentPassword, newPassword } = req.body;
 
-  let userData = await userModel.findOne({ _id: userId });
-  const hash = bcrypt.hashSync(newPassword, saltRounds);
+    let token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.send({
+        _status: false,
+        _message: "Token missing",
+      });
+    }
 
-  if (bcrypt.compareSync(oldPassword, userData.password)) {
+    // verify token
+    let decoded = jwt.verify(token, process.env.TOKENKEY);
+    let userId = decoded.userId;
+
+    // find user
+    let userData = await userModel.findById(userId);
+    if (!userData) {
+      return res.send({
+        _status: false,
+        _message: "User not found",
+      });
+    }
+
+    // check old password
+    let isMatch = await bcrypt.compare(currentPassword, userData.password);
+    if (!isMatch) {
+      return res.send({
+        _status: false,
+        _message: "Invalid old password",
+      });
+    }
+
+    // hash new password
+    const hash = await bcrypt.hash(newPassword, 10);
+
+    // update password
     await userModel.updateOne(
-      {
-        _id: userId
-      },
-      {
-        $set: {
-          password: hash
-        }
-      }
-    )
+      { _id: userId },
+      { $set: { password: hash } }
+    );
 
-    let obj = {
+    res.send({
       _status: true,
-      _message: "password change successfully.... ",
-    }
-    res.send(obj);
-  } else {
-    let obj = {
+      _message: "Password changed successfully",
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.send({
       _status: false,
-      _message: "invalid old password.... ",
-    }
-    res.send(obj);
+      _message: "Something went wrong",
+    });
   }
-
-
-}
+};
 
 let forgotPassword = async (req, res) => {
   let { email } = req.body;
-  console.log(email);
   let userData = await userModel.findOne({ email });
 
   if (userData) {
@@ -154,7 +211,7 @@ let forgotPassword = async (req, res) => {
                         </p>
 
                         <div style="text-align:center; margin:30px 0;">
-                          <a href="https://yourdomain.com/reset-password?${userData._id}"
+                          <a href="http://localhost:3000/reset-password/${userData._id}"
                              style="background-color:#4CAF50; color:white; padding:14px 25px; text-decoration:none; border-radius:5px; font-size:16px; display:inline-block;">
                              Reset Password
                           </a>
@@ -205,4 +262,71 @@ let forgotPassword = async (req, res) => {
   }
 }
 
-module.exports = { authCreate, login, forgotPassword, changePassword }
+let resetPassword = async (req, res) => {
+  let { password: newPassword } = req.body;
+  let { userId } = req.params;
+  let userData = await userModel.findOne({ _id: userId });
+  if (userData) {
+    const hash = bcrypt.hashSync(newPassword, saltRounds);
+    await userModel.updateOne(
+      {
+        _id: userId
+      },
+      {
+        $set: {
+          password: hash
+        }
+      }
+    );
+
+    let obj = {
+      _status: true,
+      _message: "Password reset successfully.... ",
+    };
+    res.send(obj);
+  } else {
+    let obj = {
+      _status: false,
+      _message: "Invalid user ID.... ",
+    };
+    res.send(obj);
+  }
+};
+
+let getUser = async (req, res) => {
+  let token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.send({
+      _status: false,
+      _message: "Token missing",
+    });
+  }
+
+  try {
+    let decoded = jwt.verify(token, process.env.TOKENKEY);
+    let userId = decoded.userId;
+
+    let userData = await userModel.findById(userId);
+    if (!userData) {
+      return res.send({
+        _status: false,
+        _message: "User not found",
+      });
+    }
+
+    res.send({
+      _status: true,
+      _message: "User found",
+      userData
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.send({
+      _status: false,
+      _message: "Invalid token",
+    });
+  }
+};
+
+module.exports = { authCreate, login, forgotPassword, changePassword, resetPassword, getUser }

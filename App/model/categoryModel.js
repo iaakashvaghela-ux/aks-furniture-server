@@ -20,19 +20,13 @@ const categorySchema = mongoose.Schema(
       default: true
     },
     slug: String,
-    created_at: {
-      type: Date,
-      default: Date.now()
-    },
-    updated_at: {
-      type: Date,
-      default: Date.now()
-    },
     deleted_at: {
       type: Date,
       default: null
     }
-
+  },
+  {
+    timestamps: true,
   }
 )
 

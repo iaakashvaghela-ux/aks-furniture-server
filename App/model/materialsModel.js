@@ -16,19 +16,13 @@ const materialsSchema = mongoose.Schema(
       type: Boolean,
       default: true
     },
-    created_at: {
-      type: Date,
-      default: Date.now()
-    },
-    updated_at: {
-      type: Date,
-      default: Date.now()
-    },
     deleted_at: {
       type: Date,
       default: null
     }
-
+  },
+  {
+    timestamps: true,
   }
 )
 
