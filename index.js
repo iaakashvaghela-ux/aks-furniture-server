@@ -32,6 +32,14 @@ mongoose.connect(`mongodb://127.0.0.1:27017/${process.env.DBNAME}`)
     .then((res) => {
         App.listen(process.env.PORT || 8000, async () => {
             console.log(`Server is running on port ${process.env.PORT}`);
+
+            // Drop stale "name" index if it exists in the products collection
+            try {
+                await mongoose.connection.db.collection("products").dropIndex("name_1");
+            } catch (err) {
+                // Ignore if it doesn't exist or already dropped
+            }
+
             await adminCreate();
         });
     })

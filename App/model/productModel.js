@@ -7,24 +7,26 @@ const productSchema = mongoose.Schema(
       required: [true, "Product name is required"],
     },
     parentCategory: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "category",
     },
     subCategory: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "subCategory",
     },
     subSubCategory: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "subSubCategory",
     },
-    material: {
-      type: String,
-      ref: "materials",
-    },
+    material: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "materials",
+      }
+    ],
     color: [
       {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "color",
       }
     ],
@@ -78,6 +80,10 @@ const productSchema = mongoose.Schema(
         type: String,
       },
     ],
+    slug: {
+      type: String,
+      required: [true, "Slug is required"],
+    },
     status: {
       type: Boolean,
       default: true,
