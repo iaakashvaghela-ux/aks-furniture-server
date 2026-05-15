@@ -181,6 +181,7 @@ let changePassword = async (req, res) => {
 let forgotPassword = async (req, res) => {
   let { email } = req.body;
   let userData = await userModel.findOne({ email });
+  const webUrl = (process.env.WEB_URL || "https://aks-furniture-web.vercel.app").replace(/\/$/, "");
 
   if (userData) {
 
@@ -210,7 +211,7 @@ let forgotPassword = async (req, res) => {
                         </p>
 
                         <div style="text-align:center; margin:30px 0;">
-                          <a href="http://localhost:3000/reset-password/${userData._id}"
+                          <a href="${webUrl}/reset-password/${userData._id}"
                              style="background-color:#4CAF50; color:white; padding:14px 25px; text-decoration:none; border-radius:5px; font-size:16px; display:inline-block;">
                              Reset Password
                           </a>
