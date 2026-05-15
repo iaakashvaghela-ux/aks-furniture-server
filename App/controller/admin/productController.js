@@ -65,8 +65,7 @@ let productCreate = async (req, res) => {
 let productView = async (req, res) => {
   try {
     let _data = await productModel.find({
-      deleted_at: null,
-      status: true
+      deleted_at: null
     }).populate(['parentCategory', 'subCategory', 'subSubCategory', 'material', 'color'])
     let obj = {
       _status: true,
@@ -86,8 +85,7 @@ let getSingleProduct = async (req, res) => {
   let { id } = req.params;
   let filter = {
     _id: id,
-    deleted_at: null,
-    status: true
+    deleted_at: null
   }
   let _data = await productModel.findOne(filter).populate(['parentCategory', 'subCategory', 'subSubCategory', 'material', 'color'])
   let obj = {
@@ -201,9 +199,12 @@ let productUpdate = async (req, res) => {
         material: Array.isArray(req.body.material) ? req.body.material : (req.body.material ? [req.body.material] : []),
         color: Array.isArray(req.body.color) ? req.body.color : (req.body.color ? [req.body.color] : []),
         slug,
-        productImage: req.files.productImage ? req.files.productImage[0].filename : null,
-        backImage: req.files.backImage ? req.files.backImage[0].filename : null,
-        galleryImage: req.files.galleryImage ? req.files.galleryImage.map(file => file.filename) : []
+        productImage: req.files.productImage ? req.files.productImage[0].filename : req.body.productImage,
+        backImage: req.files.backImage ? req.files.backImage[0].filename : req.body.backImage,
+        galleryImage: [
+          ...(Array.isArray(req.body.galleryImage) ? req.body.galleryImage : (req.body.galleryImage ? [req.body.galleryImage] : [])),
+          ...(req.files.galleryImage ? req.files.galleryImage.map(file => file.filename) : [])
+        ]
       }
 
 
@@ -231,6 +232,52 @@ let productUpdate = async (req, res) => {
     console.log(err);
   }
 }
+
+let productDelete = async (req, res) => {
+  let { ids } = req.body;
+  try {
+    let data = await productModel.updateMany(
+      { _id: { $in: ids } },
+      { $set: { deleted_at: new Date() } }
+    );
+    let obj = {
+      _status: true,
+      _message: "product deleted",
+      _data: data
+    };
+    res.send(obj);
+  } catch (err) {
+    let obj = {
+      _status: false,
+      _message: err
+    };
+    res.send(obj);
+  }
+}
+
+let productChangeStatus = async (req, res) => {
+  let { ids } = req.body;
+  try {
+    let data = await productModel.updateMany(
+      { _id: { $in: ids } },
+      { $set: { status: false } }
+    );
+    let obj = {
+      _status: true,
+      _message: "product status changed",
+      _data: data
+    };
+    res.send(obj);
+  } catch (err) {
+    let obj = {
+      _status: false,
+      _message: err
+    };
+    res.send(obj);
+  }
+}
+
+
 module.exports = {
   getParentCategory,
   getSubCategory,
@@ -240,5 +287,7 @@ module.exports = {
   productCreate,
   productView,
   getSingleProduct,
-  productUpdate
+  productUpdate,
+  productDelete,
+  productChangeStatus
 }

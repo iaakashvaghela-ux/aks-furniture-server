@@ -19,11 +19,11 @@ const authCreate = async (req, res) => {
     }
 
     let user = await userModel.insertOne(insertobj);
-
+    let token = jwt.sign({ userId: user._id }, process.env.TOKENKEY)
     let obj = {
       _status: true,
       _message: "User created",
-      user
+      token
     }
     res.send(obj);
   }
@@ -125,7 +125,6 @@ let login = async (req, res) => {
 let changePassword = async (req, res) => {
   try {
     let { currentPassword, newPassword } = req.body;
-
     let token = req.headers.authorization?.split(" ")[1];
     if (!token) {
       return res.send({
@@ -146,9 +145,9 @@ let changePassword = async (req, res) => {
         _message: "User not found",
       });
     }
-
     // check old password
     let isMatch = await bcrypt.compare(currentPassword, userData.password);
+    console.log(isMatch);
     if (!isMatch) {
       return res.send({
         _status: false,
@@ -329,4 +328,44 @@ let getUser = async (req, res) => {
   }
 };
 
-module.exports = { authCreate, login, forgotPassword, changePassword, resetPassword, getUser }
+let updateProfile = async (req, res) => {
+  let { gender } = req.body;
+  let token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.send({
+      _status: false,
+      _message: "Token missing",
+    });
+  }
+
+  try {
+    let decoded = jwt.verify(token, process.env.TOKENKEY);
+    let userId = decoded.userId;
+
+    let userData = await userModel.findById(userId);
+    if (!userData) {
+      return res.send({
+        _status: false,
+        _message: "User not found",
+      });
+    }
+
+    await userModel.updateOne(
+      { _id: userId },
+      { $set: { gender: parseInt(gender) } }
+    );
+
+    res.send({
+      _status: true,
+      _message: "Profile updated successfully",
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.send({
+      _status: false,
+      _message: "Invalid token",
+    });
+  }
+};
+module.exports = { authCreate, login, forgotPassword, changePassword, resetPassword, getUser, updateProfile }

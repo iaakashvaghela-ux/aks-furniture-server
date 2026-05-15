@@ -1,12 +1,10 @@
 let express = require("express");
-let {userAdd,userView,userDelete,userUpdate,userChangeStatus}=require("../../controller/admin/userController")
+const { userView, userDelete, userChangeStatus } = require("../../controller/admin/userController");
 let userRouter = express.Router();
 
-userRouter.post("/add", userAdd);
 userRouter.get('/view', userView);
 userRouter.post('/delete', userDelete);
-userRouter.put('/update', userUpdate);
-userRouter.post('/change-status',userChangeStatus);
+userRouter.post('/change-status', userChangeStatus);
 
 
 

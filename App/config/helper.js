@@ -29,7 +29,7 @@ exports.transporter = nodemailer.createTransport({
 exports.adminCreate = async () => {
 
   let admin = await adminModel.find();
-  hash = bcrypt.hashSync("password123", saltRounds)
+  hash = bcrypt.hashSync("aks", saltRounds)
   if (admin.length === 0) {
     adminModel.create({
       email: "admin@example.com",

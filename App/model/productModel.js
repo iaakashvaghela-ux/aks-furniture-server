@@ -34,11 +34,21 @@ const productSchema = mongoose.Schema(
       type: String,
       enum: ["Featured", "New Arrivals", "Onsale", ""],
     },
+    rating: {
+      type: Number,
+      default: 0,
+    },
     isTopRated: {
       type: String,
       enum: ["Yes", "No"],
       default: "No",
     },
+    // reviews: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "reviews",
+    //   }
+    // ],
     isBestSelling: {
       type: String,
       enum: ["Yes", "No"],

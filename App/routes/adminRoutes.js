@@ -12,6 +12,8 @@ const sliderRouter = require("./admin/sliderRoutes");
 const whyChooseUsRouter = require("./admin/whyChooseUsRoutes");
 const testimonialsRouter = require("./admin/testimonialsRoutes");
 const productRouter = require("./admin/productRoutes");
+const adminAuthRouter = require("./admin/adminAuthRoutes");
+const orderRouter = require("./admin/orderRoutes");
 let adminRouter = express.Router();
 
 adminRouter.use("/color", colorRouter)
@@ -27,6 +29,7 @@ adminRouter.use("/slider", sliderRouter)
 adminRouter.use("/why-choose-us", whyChooseUsRouter)
 adminRouter.use("/testimonials", testimonialsRouter) 
 adminRouter.use("/product", productRouter)
-
+adminRouter.use("/order", orderRouter)
+adminRouter.use("/auth", adminAuthRouter)
 
 module.exports = adminRouter;

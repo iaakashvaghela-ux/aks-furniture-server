@@ -24,11 +24,14 @@ App.use("/uploads/slider",express.static("uploads/slider"))
 App.use("/uploads/whyChooseUs",express.static("uploads/whyChooseUs"))
 App.use("/uploads/testimonials",express.static("uploads/testimonials"))
 App.use("/uploads/product",express.static("uploads/product"))
+App.use("/uploads/admin",express.static("uploads/admin"))
 // web routes 
 
 App.use("/web-api",webRouter)
 
-mongoose.connect(`mongodb://127.0.0.1:27017/${process.env.DBNAME}`)
+const mongoUri = process.env.MONGODB_URI || `mongodb://127.0.0.1:27017/${process.env.DBNAME}`;
+
+mongoose.connect(mongoUri)
     .then((res) => {
         App.listen(process.env.PORT || 8000, async () => {
             console.log(`Server is running on port ${process.env.PORT}`);

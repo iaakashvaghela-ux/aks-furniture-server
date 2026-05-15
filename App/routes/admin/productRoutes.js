@@ -4,7 +4,7 @@ const multer = require("multer");
 let productRouter = express.Router();
 const path = require("path");
 // const { productCreate, productView, productDelete, productUpdate, productChangeStatus, productSingleData } = require("../../controller/admin/productController");
-const { getParentCategory, getSubCategory, getSubSubCategory, getMaterial, getColor, productCreate, productView, getSingleProduct, productUpdate } = require("../../controller/admin/productController");
+const { getParentCategory, getSubCategory, getSubSubCategory, getMaterial, getColor, productCreate, productView, getSingleProduct, productUpdate, productDelete, productChangeStatus } = require("../../controller/admin/productController");
 
 
 const storage = multer.diskStorage({
@@ -34,13 +34,13 @@ productRouter.get("/sub-sub-category/:id", getSubSubCategory);
 productRouter.get("/material", getMaterial);
 productRouter.get("/color", getColor);
 productRouter.get('/single/:id', getSingleProduct)
-// productRouter.post('/delete', productDelete)
+productRouter.post('/delete', productDelete)
 productRouter.put('/update/:id', upload.fields([
   { name: "productImage", maxCount: 1 },
   { name: "backImage", maxCount: 1 },
   { name: "galleryImage", maxCount: 5 }
 ]), productUpdate)
-// productRouter.post('/change-status', productChangeStatus)
+productRouter.post('/change-status', productChangeStatus)
 
 
 

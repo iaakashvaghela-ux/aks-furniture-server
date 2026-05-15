@@ -4,9 +4,9 @@ let enquiryRouter = express.Router();
 
 enquiryRouter.post("/add", enquiryCreate);
 enquiryRouter.get('/view', enquiryView);
-enquiryRouter.delete('/delete', enquiryDelete);
-enquiryRouter.put('/update', enquiryUpdate);
-enquiryRouter.put('/change-status',enquiryChangeStatus);
+enquiryRouter.post('/delete', enquiryDelete);
+enquiryRouter.put('/update/:id', enquiryUpdate);
+enquiryRouter.post('/change-status',enquiryChangeStatus);
 
 
 module.exports = enquiryRouter;

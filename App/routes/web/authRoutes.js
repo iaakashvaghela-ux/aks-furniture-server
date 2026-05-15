@@ -1,5 +1,5 @@
 let express = require("express");
-const { authCreate, login, forgotPassword, changePassword, resetPassword, getUser } = require("../../controller/web/authController");
+const { authCreate, login, forgotPassword, changePassword, resetPassword, getUser, updateProfile } = require("../../controller/web/authController");
 
 
 let authRouter = express.Router();
@@ -10,7 +10,7 @@ authRouter.post("/change-password", changePassword);
 authRouter.post("/forgot-password", forgotPassword);
 authRouter.put("/reset-password/:userId", resetPassword);
 authRouter.post("/get-user", getUser);
-
+authRouter.post("/update-profile", updateProfile);
 
 
 
