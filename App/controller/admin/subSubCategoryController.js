@@ -1,4 +1,5 @@
 const categoryModel = require("../../model/categoryModel")
+const { fileToDataUri } = require("../../config/imageUpload")
 const subCategoryModel = require("../../model/subCategoryModel")
 const subSubCategoryModel = require("../../model/subSubCategoryModel")
 
@@ -22,7 +23,7 @@ const subSubCategoryCreate = async (req, res) => {
 
     let data = {
       ...req.body,
-      image: req.file ? req.file.filename : null
+      image: req.file ? fileToDataUri(req.file) : null
     }
 
     let subSubCategory = await subSubCategoryModel.create(data)
@@ -138,7 +139,7 @@ let subSubCategoryUpdate = async (req, res) => {
     let data = { ...req.body };
 
     if (req.file) {
-      data.image = req.file.filename;
+      data.image = fileToDataUri(req.file);
     }
 
     // console.log(data);

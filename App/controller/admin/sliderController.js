@@ -1,4 +1,5 @@
 const { createSlug } = require("../../config/helper");
+const { fileToDataUri } = require("../../config/imageUpload");
 const sliderModel = require("../../model/sliderModel");
 
 let sliderCreate = async (req, res) => {
@@ -29,7 +30,7 @@ let sliderCreate = async (req, res) => {
     let data = {
       ...req.body,
       slug,
-      image: req.file ? req.file.filename : null
+      image: req.file ? fileToDataUri(req.file) : null
     }
 
     let slider = await sliderModel.create(data)
@@ -109,7 +110,7 @@ let sliderUpdate = async (req, res) => {
     }
 
     if (req.file) {
-      updateData.image = req.file.filename;
+      updateData.image = fileToDataUri(req.file);
     }
 
     let updatedSlider = await sliderModel.findByIdAndUpdate(id, updateData, { new: true });

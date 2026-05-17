@@ -1,4 +1,5 @@
 const { createSlug } = require("../../config/helper")
+const { getFileDataUri, getFilesDataUri } = require("../../config/imageUpload")
 const categoryModel = require("../../model/categoryModel")
 const colorModel = require("../../model/colorModel")
 const materialsModel = require("../../model/materialsModel")
@@ -31,9 +32,9 @@ let productCreate = async (req, res) => {
         material: Array.isArray(req.body.material) ? req.body.material : (req.body.material ? [req.body.material] : []),
         color: Array.isArray(req.body.color) ? req.body.color : (req.body.color ? [req.body.color] : []),
         slug,
-        productImage: req.files.productImage ? req.files.productImage[0].filename : null,
-        backImage: req.files.backImage ? req.files.backImage[0].filename : null,
-        galleryImage: req.files.galleryImage ? req.files.galleryImage.map(file => file.filename) : []
+        productImage: getFileDataUri(req.files, "productImage"),
+        backImage: getFileDataUri(req.files, "backImage"),
+        galleryImage: getFilesDataUri(req.files, "galleryImage")
       }
 
 
@@ -199,11 +200,11 @@ let productUpdate = async (req, res) => {
         material: Array.isArray(req.body.material) ? req.body.material : (req.body.material ? [req.body.material] : []),
         color: Array.isArray(req.body.color) ? req.body.color : (req.body.color ? [req.body.color] : []),
         slug,
-        productImage: req.files.productImage ? req.files.productImage[0].filename : req.body.productImage,
-        backImage: req.files.backImage ? req.files.backImage[0].filename : req.body.backImage,
+        productImage: getFileDataUri(req.files, "productImage") || req.body.productImage,
+        backImage: getFileDataUri(req.files, "backImage") || req.body.backImage,
         galleryImage: [
           ...(Array.isArray(req.body.galleryImage) ? req.body.galleryImage : (req.body.galleryImage ? [req.body.galleryImage] : [])),
-          ...(req.files.galleryImage ? req.files.galleryImage.map(file => file.filename) : [])
+          ...getFilesDataUri(req.files, "galleryImage")
         ]
       }
 

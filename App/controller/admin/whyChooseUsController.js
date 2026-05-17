@@ -1,3 +1,4 @@
+const { fileToDataUri } = require("../../config/imageUpload");
 const whyChooseUsModel = require("../../model/whyChooseUsModel");
 
 let whyChooseUsCreate = async (req, res) => {
@@ -19,7 +20,7 @@ let whyChooseUsCreate = async (req, res) => {
 
     let data = {
       ...req.body,
-      image: req.file ? req.file.filename : null
+      image: req.file ? fileToDataUri(req.file) : null
     }
 
     let whyChooseUs = await whyChooseUsModel.create(data)
@@ -97,7 +98,7 @@ let whyChooseUsUpdate = async (req, res) => {
 
 
     if (req.file) {
-      updateData.image = req.file.filename;
+      updateData.image = fileToDataUri(req.file);
     }
 
     let updatedwhyChooseUs = await whyChooseUsModel.findByIdAndUpdate(id, updateData, { new: true });

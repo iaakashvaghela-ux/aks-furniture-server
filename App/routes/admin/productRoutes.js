@@ -1,26 +1,9 @@
 let express = require("express");
-const multer = require("multer");
+const { upload } = require("../../config/imageUpload");
 
 let productRouter = express.Router();
-const path = require("path");
 // const { productCreate, productView, productDelete, productUpdate, productChangeStatus, productSingleData } = require("../../controller/admin/productController");
 const { getParentCategory, getSubCategory, getSubSubCategory, getMaterial, getColor, productCreate, productView, getSingleProduct, productUpdate, productDelete, productChangeStatus } = require("../../controller/admin/productController");
-
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/product')
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
-  }
-})
-
-const upload = multer({ storage: storage })
-
-
-
 
 productRouter.post("/add", upload.fields([
   { name: "productImage", maxCount: 1 },

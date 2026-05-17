@@ -1,3 +1,4 @@
+const { fileToDataUri } = require("../../config/imageUpload");
 const testimonialsModel = require("../../model/testimonialsModel");
 
 let testimonialsCreate = async (req, res) => {
@@ -19,7 +20,7 @@ let testimonialsCreate = async (req, res) => {
 
     let data = {
       ...req.body,
-      image: req.file ? req.file.filename : null
+      image: req.file ? fileToDataUri(req.file) : null
     }
 
     let testimonials = await testimonialsModel.create(data)
@@ -97,7 +98,7 @@ let testimonialsUpdate = async (req, res) => {
 
 
     if (req.file) {
-      updateData.image = req.file.filename;
+      updateData.image = fileToDataUri(req.file);
     }
 
     let updatedtestimonials = await testimonialsModel.findByIdAndUpdate(id, updateData, { new: true });

@@ -1,24 +1,8 @@
 let express = require("express");
-const multer = require("multer");
+const { upload } = require("../../config/imageUpload");
 
 let subCategoryRouter = express.Router();
-const path = require("path");
 const { subCategoryCreate, subCategoryView, getParentCategory, subCategoryDelete, subCategoryUpdate, subCategoryChangeStatus, subCatSingleData } = require("../../controller/admin/subCategoryController");
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/subcategory')
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
-  }
-})
-
-const upload = multer({ storage: storage })
-
-
-
 
 subCategoryRouter.post("/add", upload.single("image"), subCategoryCreate);
 subCategoryRouter.get("/view",subCategoryView);

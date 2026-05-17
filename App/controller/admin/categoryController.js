@@ -1,4 +1,5 @@
 const { createSlug } = require("../../config/helper");
+const { fileToDataUri } = require("../../config/imageUpload");
 const categoryModel = require("../../model/categoryModel");
 const subCategoryModel = require("../../model/subCategoryModel");
 const subSubCategoryModel = require("../../model/subSubCategoryModel");
@@ -25,7 +26,7 @@ const categoryCreate = async (req, res) => {
 
     let data = {
       ...req.body,
-      image: req.file ? req.file.filename : null
+      image: req.file ? fileToDataUri(req.file) : null
     }
     data.slug = slug;
 
@@ -108,7 +109,7 @@ let categoryUpdate = async (req, res) => {
     let { id } = req.params;
     let data = { ...req.body };
     if (req.file) {
-      data.image = req.file.filename;
+      data.image = fileToDataUri(req.file);
     }
     if (data.name) {
       data.slug = createSlug(data.name);

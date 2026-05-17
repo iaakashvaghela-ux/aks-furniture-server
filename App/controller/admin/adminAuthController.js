@@ -1,6 +1,7 @@
 const adminModel = require("../../model/adminModel");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { fileToDataUri } = require("../../config/imageUpload");
 
 const getAdminIdFromToken = (req, res) => {
     const token = req.headers.authorization?.split(" ")[1];
@@ -19,6 +20,18 @@ const getAdminIdFromToken = (req, res) => {
 };
 
 const adminProjection = "-password";
+
+const getBaseUrl = (req) => {
+    const envBaseUrl = process.env.BASE_URL?.trim();
+    if (envBaseUrl) {
+        return envBaseUrl.endsWith("/") ? envBaseUrl : `${envBaseUrl}/`;
+    }
+
+    const protocol = req.headers["x-forwarded-proto"] || req.protocol;
+    return `${protocol}://${req.get("host")}/`;
+};
+
+const getAdminUploadPath = (req) => `${getBaseUrl(req)}uploads/admin/`;
 
 let adminLogin = async (req, res) => {
     try {
@@ -95,7 +108,7 @@ let adminProfile = async (req, res) => {
             _status: true,
             _message: "Profile fetched successfully",
             _data: admin,
-            path: `${process.env.BASE_URL}uploads/admin/`
+            path: getAdminUploadPath(req)
         });
     } catch (error) {
         console.error("Profile Fetch Error:", error);
@@ -118,7 +131,7 @@ let adminProfileUpdate = async (req, res) => {
         });
 
         if (req.file) {
-            updateData.image = req.file.filename;
+            updateData.image = fileToDataUri(req.file);
         }
 
         if (email) {
@@ -149,7 +162,7 @@ let adminProfileUpdate = async (req, res) => {
             _status: true,
             _message: "Profile updated successfully",
             _data: admin,
-            path: `${process.env.BASE_URL}uploads/admin/`
+            path: getAdminUploadPath(req)
         });
     } catch (error) {
         console.error("Profile Update Error:", error);
@@ -221,7 +234,7 @@ let adminCompanyProfile = async (req, res) => {
             _status: true,
             _message: "Company profile fetched successfully",
             _data: admin,
-            path: `${process.env.BASE_URL}uploads/admin/`
+            path: getAdminUploadPath(req)
         });
     } catch (error) {
         console.error("Company Profile Fetch Error:", error);
@@ -265,7 +278,7 @@ let adminCompanyProfileUpdate = async (req, res) => {
         });
 
         if (req.file) {
-            updateData.companyLogo = req.file.filename;
+            updateData.companyLogo = fileToDataUri(req.file);
         }
 
         const admin = await adminModel.findByIdAndUpdate(
@@ -282,7 +295,7 @@ let adminCompanyProfileUpdate = async (req, res) => {
             _status: true,
             _message: "Company profile updated successfully",
             _data: admin,
-            path: `${process.env.BASE_URL}uploads/admin/`
+            path: getAdminUploadPath(req)
         });
     } catch (error) {
         console.error("Company Profile Update Error:", error);
